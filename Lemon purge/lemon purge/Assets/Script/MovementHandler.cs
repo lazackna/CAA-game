@@ -19,11 +19,11 @@ public class MovementHandler : MonoBehaviour
     //movement
     private float x;
     private float y;
-    private float speed = 50f;
-    private float maxSpeedMag = 100f;
-    [SerializeField] private PhysicMaterial friction;
-    private bool isMoving;
+    private float speed = 20f;
 
+    //crouching
+    private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
+    private Vector3 playerScale;
 
     [SerializeField] private Transform groundCheckTransform;
    
@@ -31,10 +31,6 @@ public class MovementHandler : MonoBehaviour
     private float jumpStrength = 550f;
     [SerializeField] private LayerMask whatIsGround;
     
-
-
-
-    bool jumping;
 
     private void Awake()
     {
@@ -44,7 +40,7 @@ public class MovementHandler : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-      
+        this.playerScale = transform.localScale;
     }
 
     // FixedUpdate is called every physics frame
@@ -58,31 +54,36 @@ public class MovementHandler : MonoBehaviour
     private void Update()
     {
         myInputs();
-        look();   
+        //look();   
     }
 
     private void myInputs ()
     {
 
-        
-        this.x = Input.GetAxis("Horizontal");
-        this.y = Input.GetAxis("Vertical");
 
-        isMovingCheck();
+        this.x = Input.GetAxisRaw("Horizontal") * this.speed;
+        this.y = Input.GetAxisRaw("Vertical") * this.speed;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-           
             if (Physics.OverlapSphere(this.groundCheckTransform.position, 0.3f, this.whatIsGround).Length == 1)
             {
                 jump();
             }
-           
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            crouch();
+        }
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            unCrounch();
         }
 
     }
 
-    
+    /**
     private void look ()
     {
         float mouseX = Input.GetAxis("Mouse X") * this.sensitivity * Time.deltaTime;
@@ -99,19 +100,12 @@ public class MovementHandler : MonoBehaviour
         playerCam.transform.localRotation = Quaternion.Euler(xRotation, this.xDesired, 0);
         orientation.transform.localRotation = Quaternion.Euler(0, this.xDesired, 0);
     }
-
+    */
     private void movement ()
     {
-        if (this.isMoving)
-        {
-            this.friction.dynamicFriction = 0.0f;
-        } else
-        {
-            this.friction.dynamicFriction = 1.8f;
-        }
 
-        this.rb.AddForce(this.orientation.forward * speed * y);
-        this.rb.AddForce(this.orientation.right * speed * x);
+        Vector3 move = transform.right * x + transform.forward * y;
+        rb.velocity = new Vector3(move.x, this.rb.velocity.y, move.z);
         
     }
 
@@ -124,17 +118,16 @@ public class MovementHandler : MonoBehaviour
         }
     }
 
-    private void isMovingCheck ()
+    private void crouch ()
     {
-        
-        if (this.x != 0 && this.y != 0)
-        {
-            this.isMoving = true;
-        } else
-        {
-            this.isMoving = false;
-        }
-       
+        transform.localScale = this.crouchScale;
+        transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
+    }
+
+    private void unCrounch ()
+    {
+        transform.localScale = this.playerScale;
+        transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 
 
