@@ -7,30 +7,33 @@ public class MovementHandler : MonoBehaviour
     [SerializeField] private Transform playerCam;
     [SerializeField] private Transform orientation;
 
+
     private Rigidbody rb;
-
-   
-
-    //rotation and looking
-    private float xRotation;
-    private float sensitivity = 100f;
-    private float xDesired;
 
     //movement
     private float x;
     private float y;
-    private float speed = 20f;
+    private float speed;
+    private float normalSpeed = 20f;
+    private float runningSpeed = 35f;
+    private bool isRunning;
 
     //crouching
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
     private Vector3 playerScale;
+    bool isCrouching;
+    private float crouchSpeed = 8f;
 
-    [SerializeField] private Transform groundCheckTransform;
-   
+    //sliding
+    private float isSliding;
+    
+  
     //jumping
     private float jumpStrength = 550f;
     [SerializeField] private LayerMask whatIsGround;
-    
+    [SerializeField] private Transform groundCheckTransform;
+    private bool isGrounded;
+
 
     private void Awake()
     {
@@ -41,6 +44,8 @@ public class MovementHandler : MonoBehaviour
     private void Start()
     {
         this.playerScale = transform.localScale;
+
+        this.speed = this.normalSpeed;
     }
 
     // FixedUpdate is called every physics frame
@@ -57,12 +62,13 @@ public class MovementHandler : MonoBehaviour
         //look();   
     }
 
-    private void myInputs ()
+    private void myInputs()
     {
-
 
         this.x = Input.GetAxisRaw("Horizontal") * this.speed;
         this.y = Input.GetAxisRaw("Vertical") * this.speed;
+
+       
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -72,16 +78,37 @@ public class MovementHandler : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            this.isRunning = true;
+            if (!this.isCrouching)
+            {
+                this.speed = this.runningSpeed;
+            }
+            
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            this.isRunning = false;
+            if (!this.isCrouching)
+            {
+                this.speed = this.normalSpeed;
+            }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
         {
             crouch();
         }
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (Input.GetKeyUp(KeyCode.C))
         {
             unCrounch();
         }
 
     }
+
+    //this was a try at looking but it was made into its own script.
 
     /**
     private void look ()
@@ -120,15 +147,28 @@ public class MovementHandler : MonoBehaviour
 
     private void crouch ()
     {
+        this.speed = crouchSpeed;
+        this.isCrouching = true;
         transform.localScale = this.crouchScale;
         transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
     }
 
     private void unCrounch ()
     {
+        if (this.isRunning)
+        {
+            this.speed = this.runningSpeed;
+        } else
+        {
+            this.speed = this.normalSpeed;
+        }
+        
+        this.isCrouching = false;
         transform.localScale = this.playerScale;
         transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
+
+    
 
 
 }
