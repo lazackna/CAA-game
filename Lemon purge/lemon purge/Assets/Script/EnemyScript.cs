@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
 
-    private int health = 5;
+    public int health = 5;
     public GameObject bullet;
 
 
@@ -22,7 +22,7 @@ public class EnemyScript : MonoBehaviour
         
         if (health <= 0)
         {
-            Destroy(GetComponent<GameObject>());
+            Destroy(gameObject);
         }
 
     }
@@ -41,5 +41,6 @@ public class EnemyScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         this.health--;
+        Debug.Log(this.health);
     }
 }

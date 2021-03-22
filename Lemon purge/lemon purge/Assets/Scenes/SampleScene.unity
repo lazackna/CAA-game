@@ -290,6 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e90d445717fd2248be334eb70997759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 5
   bullet: {fileID: 0}
 --- !u!54 &377587820
 Rigidbody:
@@ -1096,6 +1097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e90d445717fd2248be334eb70997759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 5
   bullet: {fileID: 0}
 --- !u!1001 &229832002570095708
 PrefabInstance:
@@ -1177,6 +1179,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 8965776243245518880, guid: 25d4a7c184885a44a8c78779bae69c74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8965776243245518881, guid: 25d4a7c184885a44a8c78779bae69c74,
         type: 3}
