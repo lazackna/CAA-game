@@ -14,15 +14,15 @@ public class MovementHandler : MonoBehaviour
     private float x;
     private float y;
     private float speed;
-    private float normalSpeed = 20f;
-    private float runningSpeed = 35f;
+    private float normalSpeed = 10f;
+    private float runningSpeed = 20f;
     private bool isRunning;
 
     //crouching
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
     private Vector3 playerScale;
     bool isCrouching;
-    private float crouchSpeed = 8f;
+    private float crouchSpeed = 6f;
 
     //sliding
     private float isSliding;

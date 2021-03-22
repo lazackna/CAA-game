@@ -15,8 +15,8 @@ TagManager:
   - 
   - Ground
   - ShouldNotBeSeenByFPSCamera
-  - 
-  - 
+  - Wall
+  - Grappleable
   - 
   - 
   - 
