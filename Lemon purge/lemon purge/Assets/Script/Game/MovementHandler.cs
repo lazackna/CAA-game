@@ -17,6 +17,7 @@ public class MovementHandler : MonoBehaviour
     private float normalSpeed = 10f;
     private float runningSpeed = 20f;
     private bool isRunning;
+    private GrapplingGun grapplingGun;
 
     //crouching
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
@@ -38,6 +39,7 @@ public class MovementHandler : MonoBehaviour
     private void Awake()
     {
         this.rb = GetComponent<Rigidbody>();
+        this.grapplingGun = GetComponent<GrapplingGun>();
     }
 
     // Start is called before the first frame update
@@ -132,7 +134,25 @@ public class MovementHandler : MonoBehaviour
     {
 
         Vector3 move = transform.right * x + transform.forward * y;
-        rb.velocity = new Vector3(move.x, this.rb.velocity.y, move.z);
+        if (this.grapplingGun.IsGrappling()) {
+            if (this.x != 0 && this.y == 0)
+            {
+                rb.velocity = new Vector3(move.x, this.rb.velocity.y, this.rb.velocity.z);
+            } else if (this.y != 0 && this.x == 0)
+            {
+                rb.velocity = new Vector3(this.rb.velocity.x, this.rb.velocity.y, move.z);
+            } else if (this.x == 0 && this.y == 0)
+            {
+                rb.velocity = new Vector3(this.rb.velocity.x, this.rb.velocity.y, this.rb.velocity.z);
+            } else
+            {
+                rb.velocity = new Vector3(move.x, this.rb.velocity.y, move.z);
+            }
+          
+        } else
+        {
+            rb.velocity = new Vector3(move.x, this.rb.velocity.y, move.z);
+        }
         
     }
 
